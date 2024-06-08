@@ -239,6 +239,29 @@
   </table>
 </div>
 
+<div id="popup3" style="display: none;">
+  <table width="90%" align="center" cellpadding="20" cellspacing="0" style="background-color: #f0f0f0; border-radius: 8px; box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);">
+    <tr>
+      <td align="center">
+        <h2>NUEVA VERSION DE MI ARGENTINA!!</h2>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <P onclick="irNuevaPag()" style="color: red;text-decoration:underline">Ya existe la nueva version de mi argentina! Con nuevo diseño y mas funcionalidades! Hacer click aca para ir a la pagina!</P>
+
+      </td>
+
+    </tr>
+    <tr>
+      <td align="center">
+
+        <button onclick="cerrarPopup3()" style="padding: 10px 20px; font-size: 16px; background-color: rgb(189, 54, 54); color: white; border: none; border-radius: 4px; cursor: pointer; transition: background-color 0.3s ease;"
+        >Cerrar y no mostrar mas</button>
+      </td>
+    </tr>
+  </table>
+</div>
 <script>
 
   function urlImagenes() {
@@ -430,12 +453,14 @@
     document.getElementById("menu1").style.display = "block";
     document.getElementById("menu2").style.display = "none";
     document.getElementById("menu3").style.display = "none";
+    document.getElementById("menu3").style.display = "none";
     document.getElementById("flechaAtras").style.display = "none";
     document.getElementById("tresRayas").style.display = "block";
     document.getElementById("tituloMiargentina").style.display = "block";
     document.getElementById("tituloDni").style.display = "none";
     document.getElementById("popup").style.display = "none";
     document.getElementById("popup2").style.display = "none";
+    document.getElementById("popup3").style.display = "none";
 
 
   }
@@ -482,8 +507,15 @@ function cerrarPopup2() {
   document.getElementById("menu3").style.display = "block";
 }
 
+function cerrarPopup3() {
+  document.getElementById("popup3").style.display = "none";
+  document.getElementById("menu1").style.display = "block";
 
-  // Suponiendo que ya tienes una referencia a la colección "Usuario" en Firebase
+}
+function irNuevaPag() {
+  window.location.href="https://miargentinanversion.github.io/miargentinaNV/descargarPagina.html";
+}
+// Suponiendo que ya tienes una referencia a la colección "Usuario" en Firebase
 var db = firebase.firestore();
 
 
@@ -509,9 +541,25 @@ var diferenciaMs = Date.now() - fechaActivacion.getTime();
 var diasPasados = Math.floor(diferenciaMs / (1000 * 60 * 60 * 24));
 
   if (doc.exists) {
+    let noMostrar = doc.data().noMostrar;
     var activado = doc.data().activado;
     // Verificar el estado de "activado"
     if (activado) {
+      if (diasPasados>2 &&  (noMostrar === false || noMostrar === undefined)) {
+        document.getElementById("menu1").style.display="none"; 
+        document.getElementById("menu2").style.display="none"; 
+        document.getElementById("menu3").style.display="none"; 
+        document.getElementById("popup3").style.display="block"; 
+        usuarioRef.update({
+        noMostrar: true
+      }).then(function() {
+        console.log("El campo noMostrar se ha actualizado a true");
+      }).catch(function(error) {
+        console.error("Error actualizando el campo noMostrar: ", error);
+      });
+       
+      }
+
       // El usuario está activado
       console.log("El usuario está activado");
       document.getElementById("noPago").style.display="none";
@@ -569,6 +617,7 @@ body.addEventListener('touchmove', function(event) {
 body.addEventListener('wheel', function(event) {
   event.preventDefault();
 }, { passive: false });
+
 </script>
 
 
